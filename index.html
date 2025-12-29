@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>WiFi TV Network</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<script defer src="config.js"></script>
+<script defer src="ads.js"></script>
+<script defer src="timer.js"></script>
+</head>
+<body class="vertical">
+<div class="container">
+<header>
+  <img src="assets/logo.png">
+  <h1 id="title"></h1>
+  <p id="subtitle"></p>
+</header>
+
+<section class="video">
+  <iframe id="tvframe" allow="autoplay"></iframe>
+</section>
+
+<section class="ads">
+  <img id="adImage">
+</section>
+
+<section class="timer">
+  <p>Conectando en <span id="countdown"></span> segundos</p>
+</section>
+
+<a id="connectBtn" class="connect">Conectarse ahora</a>
+</div>
+</body>
+</html>
