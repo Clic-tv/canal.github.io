@@ -1,53 +1,39 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Admin - ClicTV</title>
+    <title>Admin ClicTV</title>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px 20px; }
-        .box { background: #111; padding: 30px; border-radius: 15px; border: 2px solid #FF6B00; width: 100%; max-width: 450px; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #222; color: #fff; }
-        button { width: 100%; padding: 15px; background: #FF6B00; color: #fff; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px;}
-        #output-container { margin-top: 20px; width: 100%; }
-        textarea { width: 100%; height: 100px; background: #1a1a1a; color: #0f0; padding: 10px; border-radius: 8px; border: 1px dashed #444; font-family: monospace; }
+        body { background: #111; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
+        input { padding: 10px; width: 300px; margin: 10px; border-radius: 5px; border: none; }
+        button { padding: 10px 20px; background: #FF6B00; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #panel { display: none; border: 1px solid #FF6B00; padding: 20px; margin-top: 20px; }
     </style>
 </head>
 <body>
-    <div id="login" class="box">
-        <h2 style="color: #FF6B00">Acceso ClicTV</h2>
-        <input type="password" id="pass" placeholder="Clave de administrador">
-        <button onclick="checkPass()">Entrar al Panel</button>
+    <div id="login">
+        <h2>Panel ClicTV</h2>
+        <input type="password" id="key" placeholder="Introduce la clave">
+        <button onclick="access()">Entrar</button>
     </div>
 
-    <div id="panel" class="box" style="display:none;">
-        <h2>Nuevo Video</h2>
-        <label>Ruta del video:</label>
-        <input type="text" id="vUrl" placeholder="videos/nombre.mp4">
-        <label>Descripción:</label>
-        <input type="text" id="vDesc" placeholder="¿De qué trata el video?">
-        <button onclick="addVideo()">Generar para data.json</button>
-        
-        <div id="output-container">
-            <p style="font-size: 12px; color: #888;">Copia y pega esto dentro de data.json:</p>
-            <textarea id="output" readonly></textarea>
-        </div>
+    <div id="panel">
+        <h3>Añadir Nuevo Video</h3>
+        <p>Sube el video a la carpeta <b>videos</b> de GitHub y pon el nombre aquí:</p>
+        <input type="text" id="name" placeholder="nombre-del-video.mp4">
+        <button onclick="gen()">Generar Código</button>
+        <pre id="out" style="background:#000; padding:10px; margin-top:20px;"></pre>
     </div>
 
     <script>
-        function checkPass() {
-            if(document.getElementById('pass').value === 'ClicTV2025') {
+        function access() {
+            if(document.getElementById('key').value === 'ClicTV2025') {
                 document.getElementById('login').style.display = 'none';
                 document.getElementById('panel').style.display = 'block';
-            } else { alert('Clave incorrecta'); }
+            }
         }
-
-        function addVideo() {
-            const data = {
-                url: document.getElementById('vUrl').value,
-                desc: document.getElementById('vDesc').value
-            };
-            // Agrega una coma al final para facilitar la inserción de varios
-            document.getElementById('output').value = JSON.stringify(data, null, 2) + ",";
+        function gen() {
+            const name = document.getElementById('name').value;
+            document.getElementById('out').innerText = `{ url: "videos/${name}", desc: "Nuevo contenido" },`;
         }
     </script>
 </body>

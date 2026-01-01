@@ -1,48 +1,43 @@
-:root { --primary-orange: #FF6B00; }
-
 body, html {
     margin: 0; padding: 0;
     background-color: #000;
     color: #fff;
-    font-family: sans-serif;
+    font-family: -apple-system, system-ui, sans-serif;
     overflow: hidden;
 }
 
 .main-header {
-    position: fixed; top: 0; width: 100%; height: 110px;
+    position: fixed; top: 0; width: 100%; height: 120px;
     display: flex; justify-content: center; align-items: center;
-    z-index: 100; pointer-events: none;
-    background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+    z-index: 10; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
 }
 
-.logo { height: 85px; pointer-events: auto; }
+.logo { height: 90px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.8)); }
 
 .video-feed {
-    height: 100vh; overflow-y: scroll;
-    scroll-snap-type: y mandatory; scrollbar-width: none;
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
 }
 .video-feed::-webkit-scrollbar { display: none; }
 
 .video-card {
-    position: relative; height: 100vh; width: 100%;
-    scroll-snap-align: start; display: flex; align-items: center;
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    scroll-snap-align: start;
+    background: #000;
 }
 
-video { width: 100vw; height: 100vh; object-fit: cover; }
-
-.video-info {
-    position: absolute; bottom: 40px; left: 20px; z-index: 5;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.9);
+video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Estilo Instagram/TikTok */
 }
 
-.volume-icon {
-    position: fixed; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 50px; color: white; opacity: 0;
-    z-index: 1000; pointer-events: none;
-    transition: opacity 0.3s;
-    background: rgba(0,0,0,0.5);
-    width: 100px; height: 100px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 50%;
+.info {
+    position: absolute; bottom: 30px; left: 20px;
+    z-index: 5; text-shadow: 0 2px 4px #000;
 }
