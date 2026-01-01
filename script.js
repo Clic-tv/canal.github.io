@@ -1,38 +1,51 @@
-// CONFIGURACIÓN: Solo edita esta lista
-const videos = [
-    { url: "videos/video1.mp4", desc: "Bienvenidos a ClicTV" },
-    { url: "videos/video2.mp4", desc: "Sigue nuestra programación" }
-];
+const slider = document.getElementById('story-slider');
+const audioHint = document.getElementById('audio-status');
 
-const container = document.getElementById('video-container');
-
-function load() {
-    videos.forEach((vid) => {
-        const section = document.createElement('section');
-        section.className = 'video-card';
-        section.innerHTML = `
-            <video loop playsinline muted autoplay onclick="this.muted = !this.muted">
-                <source src="${vid.url}" type="video/mp4">
-            </video>
-            <div class="info">
-                <strong>@ClicTV</strong>
-                <p>${vid.desc}</p>
+async function initApp() {
+    const res = await fetch('data.json');
+    const stories = await res.json();
+    
+    stories.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'story-card';
+        card.innerHTML = `
+            <div class="interface">
+                <div class="header">
+                    <div class="progress-bar-group">
+                        <div class="progress-bg"><div class="progress-fill" id="fill-${index}"></div></div>
+                    </div>
+                    <div class="user-row">
+                        <img src="Logo.png" class="brand-logo">
+                    </div>
+                </div>
             </div>
+            <video id="vid-${index}" playsinline muted autoplay>
+                <source src="${item.url}" type="video/mp4">
+            </video>
         `;
-        container.appendChild(section);
+        
+        const video = card.querySelector('video');
+        
+        // Al tocar el video: activar/desactivar audio
+        video.onclick = () => {
+            video.muted = !video.muted;
+            audioHint.innerText = video.muted ? "🔇" : "🔊";
+            audioHint.style.opacity = 1;
+            setTimeout(() => audioHint.style.opacity = 0, 600);
+        };
+
+        // Progreso y Salto automático
+        video.ontimeupdate = () => {
+            const fill = document.getElementById(`fill-${index}`);
+            if(fill) fill.style.width = (video.currentTime / video.duration) * 100 + "%";
+        };
+
+        video.onended = () => {
+            slider.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
+        };
+
+        slider.appendChild(card);
     });
 }
 
-// Observador para que el video en pantalla se reproduzca y los demás se pausen
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        const v = entry.target.querySelector('video');
-        if (entry.isIntersecting) v.play();
-        else { v.pause(); v.currentTime = 0; }
-    });
-}, { threshold: 0.8 });
-
-window.onload = () => {
-    load();
-    document.querySelectorAll('.video-card').forEach(c => observer.observe(c));
-};
+initApp();

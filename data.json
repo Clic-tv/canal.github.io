@@ -1,6 +1,4 @@
 [
-  {
-    "url": "videos/promo.mp4",
-    "desc": "Bienvenidos a ClicTV. La señal oficial en formato vertical. 📺"
-  }
+  { "url": "videos/video1.mp4", "desc": "Promo ClicTV" },
+  { "url": "videos/video2.mp4", "desc": "Noticias" }
 ]
