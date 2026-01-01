@@ -8,24 +8,20 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-
     <div id="app" class="story-container">
         <div id="progress-area" class="progress-area"></div>
-
         <header class="story-header">
             <div class="brand">
                 <img src="Logo.png" alt="ClicTV" class="main-logo">
                 <div class="brand-text">
                     <span class="name">ClicTV_Oficial</span>
-                    <span class="status">● TRANSMITIENDO</span>
+                    <span class="status">● EN VIVO</span>
                 </div>
             </div>
         </header>
-
         <div class="video-canvas" onclick="handleInteraction(event)">
             <video id="player" playsinline muted autoplay></video>
         </div>
-
         <aside class="side-actions">
             <div class="action-item" onclick="toggleLike()">
                 <i id="like-icon" class="fa-regular fa-heart"></i>
@@ -35,22 +31,16 @@
                 <i class="fa-regular fa-comment-dots"></i>
             </div>
         </aside>
-
         <div id="comment-panel" class="comment-panel">
-            <div class="comment-header">
-                <span>Comentarios</span>
-                <button onclick="closeComments()">✕</button>
-            </div>
+            <div class="comment-header"><span>Comentarios</span><button onclick="closeComments()">✕</button></div>
             <div id="comment-list" class="comment-list"></div>
             <div class="comment-input-area">
-                <input type="text" id="comment-input" placeholder="Escribe un comentario...">
+                <input type="text" id="comment-input" placeholder="Escribe algo...">
                 <button onclick="sendComment()">Enviar</button>
             </div>
         </div>
-
         <div id="audio-toast" class="audio-toast">Toca para activar audio 🔊</div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
