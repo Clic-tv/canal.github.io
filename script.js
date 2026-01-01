@@ -1,5 +1,4 @@
 const player = document.getElementById('player');
-const app = document.getElementById('app');
 const audioToast = document.getElementById('audio-toast');
 let stories = [];
 let currentIndex = 0;
@@ -9,7 +8,7 @@ async function startClicTV() {
         const response = await fetch('data.json');
         stories = await response.json();
         
-        // Crear barras
+        // Inicializar barras de progreso según cantidad de videos
         const barArea = document.getElementById('progress-area');
         stories.forEach((_, i) => {
             const bar = document.createElement('div');
@@ -19,16 +18,16 @@ async function startClicTV() {
         });
 
         loadStory(0);
-    } catch (e) { console.error("Error cargando archivos"); }
+    } catch (e) { console.error("Error en base de datos"); }
 }
 
 function loadStory(index) {
-    if (index >= stories.length) index = 0; // Lista ilimitada (bucle)
+    if (index >= stories.length) index = 0; // Bucle infinito de programación
     currentIndex = index;
     
     player.src = stories[index].url;
     
-    // Actualizar barras
+    // Sincronizar estado visual de las barras
     stories.forEach((_, i) => {
         const fill = document.getElementById(`f-${i}`);
         if (i < index) fill.style.width = '100%';
@@ -38,37 +37,42 @@ function loadStory(index) {
     player.play();
 }
 
-// SOLUCIÓN AUDIO: Al primer toque activamos sonido para siempre
 function handleInteraction(e) {
-    const x = e.clientX;
-    const width = window.innerWidth;
-
-    // Activar audio si está muteado
+    // Activar audio en el primer clic (Requerido por Navegadores)
     if (player.muted) {
         player.muted = false;
         audioToast.style.opacity = 0;
     }
 
-    // Navegación tipo Instagram (Izquierda/Derecha)
-    if (x > width / 2) loadStory(currentIndex + 1);
-    else if (currentIndex > 0) loadStory(currentIndex - 1);
+    const x = e.clientX;
+    const width = window.innerWidth;
+    // Navegación Manual: Derecha (Siguiente) / Izquierda (Atrás)
+    if (x > width * 0.7) loadStory(currentIndex + 1);
+    else if (x < width * 0.3 && currentIndex > 0) loadStory(currentIndex - 1);
 }
 
+// ACTUALIZACIÓN DE TIEMPO REAL: No resume el video, usa la duración exacta del archivo
 player.ontimeupdate = () => {
     const fill = document.getElementById(`f-${currentIndex}`);
-    if (fill) fill.style.width = (player.currentTime / player.duration) * 100 + "%";
+    if (fill && player.duration) {
+        const progress = (player.currentTime / player.duration) * 100;
+        fill.style.width = progress + "%";
+    }
 };
 
-player.onended = () => loadStory(currentIndex + 1);
+// SALTO AUTOMÁTICO: Solo cuando el video llega al 100% de su duración
+player.onended = () => {
+    loadStory(currentIndex + 1);
+};
 
-// Funciones de Like y Comentarios
+// Funciones Sociales
 function toggleLike() {
     const icon = document.getElementById('like-icon');
     const count = document.getElementById('like-count');
-    icon.classList.toggle('fa-solid');
+    const isLiked = icon.classList.toggle('fa-solid');
     icon.classList.toggle('fa-regular');
-    icon.style.color = icon.classList.contains('fa-solid') ? '#ff3040' : '#fff';
-    count.innerText = icon.classList.contains('fa-solid') ? '1' : '0';
+    icon.style.color = isLiked ? '#ff3040' : '#fff';
+    count.innerText = isLiked ? '1' : '0';
 }
 
 function openComments() { document.getElementById('comment-panel').classList.add('open'); }
@@ -76,12 +80,11 @@ function closeComments() { document.getElementById('comment-panel').classList.re
 
 function sendComment() {
     const input = document.getElementById('comment-input');
-    if (!input.value) return;
+    if (!input.value.trim()) return;
     const list = document.getElementById('comment-list');
-    if (list.querySelector('.empty-msg')) list.innerHTML = '';
     const div = document.createElement('div');
-    div.style.marginBottom = "10px";
-    div.innerHTML = `<strong>Invitado:</strong> ${input.value}`;
+    div.style.padding = "8px 0";
+    div.innerHTML = `<span style="color:var(--accent); font-weight:bold;">Usuario:</span> ${input.value}`;
     list.prepend(div);
     input.value = '';
 }

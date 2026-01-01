@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ClicTV Premium</title>
+    <title>ClicTV - Señal Vertical</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -17,7 +17,7 @@
                 <img src="Logo.png" alt="ClicTV" class="main-logo">
                 <div class="brand-text">
                     <span class="name">ClicTV_Oficial</span>
-                    <span class="status">● EN VIVO</span>
+                    <span class="status">● TRANSMITIENDO</span>
                 </div>
             </div>
         </header>
@@ -41,12 +41,10 @@
                 <span>Comentarios</span>
                 <button onclick="closeComments()">✕</button>
             </div>
-            <div id="comment-list" class="comment-list">
-                <p class="empty-msg">Sé el primero en comentar...</p>
-            </div>
+            <div id="comment-list" class="comment-list"></div>
             <div class="comment-input-area">
-                <input type="text" id="comment-input" placeholder="Añade un comentario...">
-                <button onclick="sendComment()">Publicar</button>
+                <input type="text" id="comment-input" placeholder="Escribe un comentario...">
+                <button onclick="sendComment()">Enviar</button>
             </div>
         </div>
 
