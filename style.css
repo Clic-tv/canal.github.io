@@ -17,7 +17,7 @@ body, html {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 90px; /* Mayor altura para el logo */
+    height: 100px; /* Altura aumentada para el logo */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,7 +26,7 @@ body, html {
 }
 
 .logo { 
-    height: 65px; /* Tamaño de logo incrementado */
+    height: 100px; /* Logo notablemente más grande */
     filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
 }
 

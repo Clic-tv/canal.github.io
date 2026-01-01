@@ -7,32 +7,38 @@
         body { background: #000; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px 20px; }
         .box { background: #111; padding: 30px; border-radius: 15px; border: 2px solid #FF6B00; width: 100%; max-width: 450px; }
         input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #222; color: #fff; }
-        button { width: 100%; padding: 15px; background: #FF6B00; color: #fff; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; }
-        #output { background: #1a1a1a; color: #0f0; padding: 15px; margin-top: 20px; font-size: 13px; border-radius: 8px; border: 1px dashed #444; word-break: break-all; }
+        button { width: 100%; padding: 15px; background: #FF6B00; color: #fff; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px;}
+        #output-container { margin-top: 20px; width: 100%; }
+        textarea { width: 100%; height: 100px; background: #1a1a1a; color: #0f0; padding: 10px; border-radius: 8px; border: 1px dashed #444; font-family: monospace; }
     </style>
 </head>
 <body>
     <div id="login" class="box">
-        <h2 style="color: #FF6B00">Acceso Admin</h2>
-        <input type="password" id="pass" placeholder="Clave de acceso">
-        <button onclick="checkPass()">Entrar</button>
+        <h2 style="color: #FF6B00">Acceso ClicTV</h2>
+        <input type="password" id="pass" placeholder="Clave de administrador">
+        <button onclick="checkPass()">Entrar al Panel</button>
     </div>
 
     <div id="panel" class="box" style="display:none;">
-        <h2>Publicar en ClicTV</h2>
-        <input type="text" id="vUrl" placeholder="URL de video (ej: videos/clip1.mp4)">
-        <input type="text" id="vDesc" placeholder="Descripción corta">
-        <button onclick="addVideo()">Generar Código</button>
-        <div id="output">Copia el resultado en script.js...</div>
+        <h2>Nuevo Video</h2>
+        <label>Ruta del video:</label>
+        <input type="text" id="vUrl" placeholder="videos/nombre.mp4">
+        <label>Descripción:</label>
+        <input type="text" id="vDesc" placeholder="¿De qué trata el video?">
+        <button onclick="addVideo()">Generar para data.json</button>
+        
+        <div id="output-container">
+            <p style="font-size: 12px; color: #888;">Copia y pega esto dentro de data.json:</p>
+            <textarea id="output" readonly></textarea>
+        </div>
     </div>
 
     <script>
         function checkPass() {
-            // Clave configurada: ClicTV2025
             if(document.getElementById('pass').value === 'ClicTV2025') {
                 document.getElementById('login').style.display = 'none';
                 document.getElementById('panel').style.display = 'block';
-            } else { alert('Acceso denegado'); }
+            } else { alert('Clave incorrecta'); }
         }
 
         function addVideo() {
@@ -40,7 +46,8 @@
                 url: document.getElementById('vUrl').value,
                 desc: document.getElementById('vDesc').value
             };
-            document.getElementById('output').innerText = JSON.stringify(data, null, 2) + ",";
+            // Agrega una coma al final para facilitar la inserción de varios
+            document.getElementById('output').value = JSON.stringify(data, null, 2) + ",";
         }
     </script>
 </body>
