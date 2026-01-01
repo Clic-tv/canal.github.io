@@ -2,16 +2,31 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ClicTV - Stories</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ClicTV Stories</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="story-slider" class="story-container">
+    <div id="app" class="app-container">
+        <div class="progress-container" id="progress-container"></div>
+
+        <div class="story-header">
+            <div class="user-info">
+                <img src="Logo.png" alt="ClicTV" class="brand-logo">
+                <div class="text-info">
+                    <span class="username">ClicTV_Oficial</span>
+                    <span class="time">En Vivo</span>
+                </div>
+            </div>
         </div>
 
-    <div id="audio-status" class="audio-hint">🔇</div>
+        <div class="video-wrapper" onclick="handleTap(event)">
+            <video id="main-video" playsinline muted autoplay></video>
+        </div>
+
+        <div id="audio-status" class="audio-status">🔇</div>
+    </div>
 
     <script src="script.js"></script>
 </body>

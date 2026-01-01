@@ -1,51 +1,84 @@
-const slider = document.getElementById('story-slider');
-const audioHint = document.getElementById('audio-status');
+const video = document.getElementById('main-video');
+const progressContainer = document.getElementById('progress-container');
+const audioStatus = document.getElementById('audio-status');
 
+let currentStory = 0;
+let stories = [];
+
+// 1. Cargar Datos
 async function initApp() {
-    const res = await fetch('data.json');
-    const stories = await res.json();
-    
-    stories.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.className = 'story-card';
-        card.innerHTML = `
-            <div class="interface">
-                <div class="header">
-                    <div class="progress-bar-group">
-                        <div class="progress-bg"><div class="progress-fill" id="fill-${index}"></div></div>
-                    </div>
-                    <div class="user-row">
-                        <img src="Logo.png" class="brand-logo">
-                    </div>
-                </div>
-            </div>
-            <video id="vid-${index}" playsinline muted autoplay>
-                <source src="${item.url}" type="video/mp4">
-            </video>
-        `;
+    try {
+        const response = await fetch('data.json');
+        stories = await response.json();
         
-        const video = card.querySelector('video');
-        
-        // Al tocar el video: activar/desactivar audio
-        video.onclick = () => {
-            video.muted = !video.muted;
-            audioHint.innerText = video.muted ? "🔇" : "🔊";
-            audioHint.style.opacity = 1;
-            setTimeout(() => audioHint.style.opacity = 0, 600);
-        };
+        // Crear barras de progreso
+        stories.forEach((_, i) => {
+            const bar = document.createElement('div');
+            bar.className = 'progress-bar';
+            bar.innerHTML = `<div class="progress-fill" id="fill-${i}"></div>`;
+            progressContainer.appendChild(bar);
+        });
 
-        // Progreso y Salto automático
-        video.ontimeupdate = () => {
-            const fill = document.getElementById(`fill-${index}`);
-            if(fill) fill.style.width = (video.currentTime / video.duration) * 100 + "%";
-        };
-
-        video.onended = () => {
-            slider.scrollBy({ left: window.innerWidth, behavior: 'smooth' });
-        };
-
-        slider.appendChild(card);
-    });
+        loadStory(0);
+    } catch (e) {
+        console.error("Error inicializando ClicTV:", e);
+    }
 }
 
+// 2. Cargar Historia específica
+function loadStory(index) {
+    if (index >= stories.length) {
+        currentStory = 0; // Reiniciar al terminar todas
+        loadStory(0);
+        return;
+    }
+
+    currentStory = index;
+    video.src = stories[index].url;
+    
+    // Resetear barras anteriores y siguientes
+    stories.forEach((_, i) => {
+        const f = document.getElementById(`fill-${i}`);
+        if (i < index) f.style.width = '100%';
+        else if (i > index) f.style.width = '0%';
+    });
+
+    video.play().catch(() => console.log("Esperando interacción para audio"));
+}
+
+// 3. Manejo de Tap (Lado derecho siguiente, Lado izquierdo previa)
+function handleTap(e) {
+    const screenWidth = window.innerWidth;
+    if (e.clientX > screenWidth / 2) {
+        loadStory(currentStory + 1);
+    } else {
+        if (currentStory > 0) loadStory(currentStory - 1);
+    }
+    
+    // Activar audio en el primer toque
+    if (video.muted) {
+        video.muted = false;
+        showAudioFeedback("🔊");
+    }
+}
+
+function showAudioFeedback(icon) {
+    audioStatus.innerText = icon;
+    audioStatus.style.opacity = 1;
+    setTimeout(() => audioStatus.style.opacity = 0, 800);
+}
+
+// 4. Eventos de Video
+video.ontimeupdate = () => {
+    const fill = document.getElementById(`fill-${currentStory}`);
+    if (fill && video.duration) {
+        fill.style.width = (video.currentTime / video.duration) * 100 + "%";
+    }
+};
+
+video.onended = () => {
+    loadStory(currentStory + 1);
+};
+
+// Iniciar aplicación
 initApp();
