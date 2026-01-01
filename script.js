@@ -1,84 +1,89 @@
-const video = document.getElementById('main-video');
-const progressContainer = document.getElementById('progress-container');
-const audioStatus = document.getElementById('audio-status');
-
-let currentStory = 0;
+const player = document.getElementById('player');
+const app = document.getElementById('app');
+const audioToast = document.getElementById('audio-toast');
 let stories = [];
+let currentIndex = 0;
 
-// 1. Cargar Datos
-async function initApp() {
+async function startClicTV() {
     try {
         const response = await fetch('data.json');
         stories = await response.json();
         
-        // Crear barras de progreso
+        // Crear barras
+        const barArea = document.getElementById('progress-area');
         stories.forEach((_, i) => {
             const bar = document.createElement('div');
-            bar.className = 'progress-bar';
-            bar.innerHTML = `<div class="progress-fill" id="fill-${i}"></div>`;
-            progressContainer.appendChild(bar);
+            bar.className = 'bar';
+            bar.innerHTML = `<div class="fill" id="f-${i}"></div>`;
+            barArea.appendChild(bar);
         });
 
         loadStory(0);
-    } catch (e) {
-        console.error("Error inicializando ClicTV:", e);
-    }
+    } catch (e) { console.error("Error cargando archivos"); }
 }
 
-// 2. Cargar Historia específica
 function loadStory(index) {
-    if (index >= stories.length) {
-        currentStory = 0; // Reiniciar al terminar todas
-        loadStory(0);
-        return;
-    }
-
-    currentStory = index;
-    video.src = stories[index].url;
+    if (index >= stories.length) index = 0; // Lista ilimitada (bucle)
+    currentIndex = index;
     
-    // Resetear barras anteriores y siguientes
+    player.src = stories[index].url;
+    
+    // Actualizar barras
     stories.forEach((_, i) => {
-        const f = document.getElementById(`fill-${i}`);
-        if (i < index) f.style.width = '100%';
-        else if (i > index) f.style.width = '0%';
+        const fill = document.getElementById(`f-${i}`);
+        if (i < index) fill.style.width = '100%';
+        else if (i > index) fill.style.width = '0%';
     });
 
-    video.play().catch(() => console.log("Esperando interacción para audio"));
+    player.play();
 }
 
-// 3. Manejo de Tap (Lado derecho siguiente, Lado izquierdo previa)
-function handleTap(e) {
-    const screenWidth = window.innerWidth;
-    if (e.clientX > screenWidth / 2) {
-        loadStory(currentStory + 1);
-    } else {
-        if (currentStory > 0) loadStory(currentStory - 1);
+// SOLUCIÓN AUDIO: Al primer toque activamos sonido para siempre
+function handleInteraction(e) {
+    const x = e.clientX;
+    const width = window.innerWidth;
+
+    // Activar audio si está muteado
+    if (player.muted) {
+        player.muted = false;
+        audioToast.style.opacity = 0;
     }
-    
-    // Activar audio en el primer toque
-    if (video.muted) {
-        video.muted = false;
-        showAudioFeedback("🔊");
-    }
+
+    // Navegación tipo Instagram (Izquierda/Derecha)
+    if (x > width / 2) loadStory(currentIndex + 1);
+    else if (currentIndex > 0) loadStory(currentIndex - 1);
 }
 
-function showAudioFeedback(icon) {
-    audioStatus.innerText = icon;
-    audioStatus.style.opacity = 1;
-    setTimeout(() => audioStatus.style.opacity = 0, 800);
-}
-
-// 4. Eventos de Video
-video.ontimeupdate = () => {
-    const fill = document.getElementById(`fill-${currentStory}`);
-    if (fill && video.duration) {
-        fill.style.width = (video.currentTime / video.duration) * 100 + "%";
-    }
+player.ontimeupdate = () => {
+    const fill = document.getElementById(`f-${currentIndex}`);
+    if (fill) fill.style.width = (player.currentTime / player.duration) * 100 + "%";
 };
 
-video.onended = () => {
-    loadStory(currentStory + 1);
-};
+player.onended = () => loadStory(currentIndex + 1);
 
-// Iniciar aplicación
-initApp();
+// Funciones de Like y Comentarios
+function toggleLike() {
+    const icon = document.getElementById('like-icon');
+    const count = document.getElementById('like-count');
+    icon.classList.toggle('fa-solid');
+    icon.classList.toggle('fa-regular');
+    icon.style.color = icon.classList.contains('fa-solid') ? '#ff3040' : '#fff';
+    count.innerText = icon.classList.contains('fa-solid') ? '1' : '0';
+}
+
+function openComments() { document.getElementById('comment-panel').classList.add('open'); }
+function closeComments() { document.getElementById('comment-panel').classList.remove('open'); }
+
+function sendComment() {
+    const input = document.getElementById('comment-input');
+    if (!input.value) return;
+    const list = document.getElementById('comment-list');
+    if (list.querySelector('.empty-msg')) list.innerHTML = '';
+    const div = document.createElement('div');
+    div.style.marginBottom = "10px";
+    div.innerHTML = `<strong>Invitado:</strong> ${input.value}`;
+    list.prepend(div);
+    input.value = '';
+}
+
+startClicTV();
