@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ClicTV - Vertical</title>
+    <title>ClicTV - Televisión Vertical</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
@@ -12,9 +13,11 @@
         <img src="Logo.png" alt="ClicTV" class="logo">
     </header>
 
-    <main id="video-container" class="video-feed"></main>
+    <div id="volume-indicator" class="volume-icon">
+        <i class="fas fa-volume-mute"></i>
+    </div>
 
-    <div class="admin-access" onclick="window.location.href='admin.html'"></div>
+    <main id="video-container" class="video-feed"></main>
 
     <script src="script.js"></script>
 </body>
