@@ -1,9 +1,19 @@
+// ==========================================
+// DB DE VIDEOS - PEGA TUS NUEVOS VIDEOS AQUÍ
+// ==========================================
 const videoData = [
     {
-        url: "videos/ejemplo.mp4", 
+        url: "videos/promo.mp4", 
         desc: "Bienvenidos a ClicTV. La televisión del futuro es vertical. 📺"
-    }
+    },
+     {
+"url": "https://github.com/Clic-tv/canal.github.io/blob/main/videos/canal.mp4",
+"desc": "Canal"
+},
+    // Ejemplo:
+    // { "url": "videos/noticia1.mp4", "desc": "Última hora en ClicTV" },
 ];
+// ==========================================
 
 const container = document.getElementById('video-container');
 
@@ -13,10 +23,7 @@ function init() {
         section.className = 'video-card';
         section.innerHTML = `
             <video loop playsinline preload="auto" onclick="this.paused ? this.play() : this.pause()">
-                <source src="{
-"url": "https://github.com/Clic-tv/canal.github.io/blob/main/videos/canal.mp4",
-"desc": "Canal"
-}," type="video/mp4">
+                <source src="${video.url}" type="video/mp4">
             </video>
             <div class="video-info">
                 <h3>@ClicTV_Oficial</h3>
